@@ -29,6 +29,8 @@ job lifecycle, error codes and warning codes.
 from __future__ import annotations
 
 import logging
+import re
+import secrets
 from contextlib import asynccontextmanager
 from pathlib import Path
 from uuid import uuid4
@@ -36,8 +38,8 @@ from uuid import uuid4
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from pydantic import BaseModel
 
-from loci.fingerprint import InputCopy, Layer, ScorabilityError
-from loci.scorer import BrandDistinctivenessScorer
+from loci.fingerprint import ASSET_LAYER_MAP, MVBF_FIELDS, InputCopy, Layer, ScorabilityError
+from loci.scorer import LAYER_WEIGHTS, BrandDistinctivenessScorer
 from loci.vector_store import BrandVectorStore
 from vector_generation import industries, jobs
 from vector_generation.generate_embeddings import generate_from_dicts
@@ -99,6 +101,48 @@ def list_brands() -> dict:
             {"brand_id": bid, "brand_name": s.fp.brand_name, "warnings": s.warnings}
             for bid, s in _SCORERS.items()
         ]
+    }
+
+
+class CreateBrandRequest(BaseModel):
+    brand_name: str
+
+
+def _slugify(name: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+    return slug or "brand"
+
+
+def _mint_brand_id(brand_name: str) -> str:
+    base = _slugify(brand_name)
+    for _ in range(20):
+        candidate = f"{base}-{secrets.token_hex(3)}"
+        if candidate not in _SCORERS and not (EMBEDDINGS_ROOT / candidate).exists():
+            return candidate
+    raise HTTPException(500, "Could not mint a unique brand_id, try again.")
+
+
+@app.post("/brands", status_code=201)
+def create_brand(req: CreateBrandRequest) -> dict:
+    return {"brand_id": _mint_brand_id(req.brand_name)}
+
+
+@app.get("/brands/{brand_id}")
+def get_brand(brand_id: str) -> dict:
+    scorer = _get_scorer(brand_id)
+    mvbf_status = scorer.fp.mvbf_status()
+    missing_fields = [f for f, present in mvbf_status.items() if not present]
+    return {
+        "brand_id": brand_id,
+        "brand_name": scorer.fp.brand_name,
+        "industry": scorer.store.manifest["industry"],
+        "mvbf": {"met": not missing_fields, "missing_fields": missing_fields},
+        "layers_present": [l.value for l in scorer.fp.layers_present()],
+        "scorable": scorer.store.manifest["scorable"],
+        "scorable_message": scorer.store.manifest["scorable_message"],
+        "signature_terms": sorted(scorer.lexical.signatures),
+        "cliche_terms": sorted(scorer.lexical.cliches),
+        "warnings": scorer.warnings,
     }
 
 
@@ -233,3 +277,15 @@ def get_industry(industry_id: str) -> dict:
     if record is None:
         raise HTTPException(404, f"Unknown industry_id '{industry_id}'.")
     return record
+
+
+@app.get("/schema/assets")
+def asset_schema() -> dict:
+    layers: dict[str, list[str]] = {}
+    for asset_type, layer in ASSET_LAYER_MAP.items():
+        layers.setdefault(layer.value, []).append(asset_type)
+    return {
+        "mvbf_fields": list(MVBF_FIELDS),
+        "layers": layers,
+        "scored_layers": sorted(l.value for l in LAYER_WEIGHTS),
+    }
