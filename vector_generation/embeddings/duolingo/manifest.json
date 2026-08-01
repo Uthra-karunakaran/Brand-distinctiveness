@@ -12,5 +12,6 @@
     "voice"
   ],
   "scorable": true,
-  "scorable_message": "ok"
+  "scorable_message": "ok",
+  "warnings": []
 }

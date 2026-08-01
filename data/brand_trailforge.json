@@ -1,0 +1,56 @@
+{
+  "_note": "Case 2 — a new brand in a DIFFERENT industry (outdoor gear / apparel, not edtech). Pair with data/generic_outdoor_gear.json as its competitor corpus — there is no existing generic file for this industry, so a new one was written. Illustrative text, not copied from any live brand.",
+  "brand_id": "trailforge",
+  "brand_name": "TrailForge",
+  "assets": {
+    "name": "TrailForge",
+    "tagline": "Gear that outlasts the warranty.",
+    "mission": "Build outdoor equipment good enough that repair, not replacement, is the default choice.",
+    "vision": "A world where 'gear graveyard' stops being a real category on landfill maps.",
+    "values": "If it breaks before ten years, we redesign it, we don't remarket it. We publish our repair rates in public. Repair is a feature, not a favor we grant reluctantly. We would rather sell you one jacket in a decade than four.",
+    "about": "We started in a garage fixing gear that other companies wouldn't repair under warranty. After a few years of fixing other people's design mistakes for free, we decided to stop being generous and start being the ones who design it properly in the first place.",
+    "founder_story": "One of us used to run warranty claims for a large outdoor brand and got tired of approving replacements for the same broken zipper pull, year after year, on a jacket that was otherwise fine. We now sell that same jacket with a zipper pull you can replace yourself with a coin.",
+    "homepage": [
+      "Ten-year warranty. We mean it literally, not as a marketing number.",
+      "Every seam, zipper and buckle is field-replaceable. We sell the parts, not just the jacket.",
+      "Built by people who used to approve your warranty claims somewhere else."
+    ],
+    "product_page": [
+      "The 3-layer shell is rated to 20,000mm and shipped with the spare zipper pull it will eventually need, because it will eventually need one.",
+      "We publish the failure point on every product page: where it wears first, and how long that takes under normal use.",
+      "No seasonal colorways. We make one version of each product and improve it once a year, in place."
+    ],
+    "cta": [
+      "Buy the jacket you'll still be wearing in ten winters.",
+      "Send us the broken one. We'll tell you if it's worth fixing before you pay for shipping.",
+      "See the failure-rate data before you check out."
+    ],
+    "blog": [
+      "We tore down our own five-year-old jacket next to a competitor's this-season model. Ours had less material fatigue at the seams. Full photos and pressure-test numbers inside.",
+      "Why we stopped doing seasonal colorways: it made customers replace gear that wasn't broken, and that's the opposite of what we're trying to do.",
+      "The real cost of a 'lifetime warranty' with a shrinking list of covered parts. We list our covered parts and don't shrink the list."
+    ],
+    "social": [
+      "Someone sent us a photo of our jacket from 2016, still in rotation, patched twice. This is the whole business model in one photo.",
+      "Asked us for a discount code. We don't run those. Asked us for the repair guide instead — that one's free and always will be."
+    ],
+    "ad": [
+      "A jacket that's still working in ten years costs less per year than one you replace every three.",
+      "We will tell you the exact hour count our zippers are rated for. Nobody else will."
+    ],
+    "job_post": [
+      "You'll spend real time in the field pressure-testing gear before it ships, not just reading the spec sheet. If that sounds slow, this isn't the team for you.",
+      "We need someone who gets annoyed by a product roadmap built around a sales calendar instead of a wear-testing calendar."
+    ],
+    "support_doc": [
+      "Every zipper, buckle and drawcord we sell is listed with a part number so you can replace it yourself without mailing the whole jacket back to us.",
+      "Repairs outside the warranty window are billed at cost of parts only — we do not mark up labor on gear we already sold you once."
+    ],
+    "case_study": [
+      "A guiding company outfitted twelve guides in 2015; by 2024, all twelve jackets were still in active rotation with an average of 1.3 field repairs each, logged and shared with us."
+    ],
+    "testimonial": [
+      "I mailed them a photo of a torn cuff expecting a sales pitch for a new jacket. They mailed me a $6 replacement cuff and instructions instead."
+    ]
+  }
+}

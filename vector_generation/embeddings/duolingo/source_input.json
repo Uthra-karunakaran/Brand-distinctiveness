@@ -1,0 +1,137 @@
+{
+  "brand": {
+    "_note": "Illustrative fingerprint. All asset text is written for this demo in the style of the brand, not copied from live pages. Swap in real scraped assets for production.",
+    "brand_id": "duolingo",
+    "brand_name": "Duolingo",
+    "assets": {
+      "name": "Duolingo",
+      "tagline": "The free, fun, and effective way to learn a language.",
+      "mission": "Make language education free and available to everyone on earth, and keep it that way.",
+      "vision": "A world where the best education money can buy costs nothing.",
+      "values": "Take the user's side. Ship it. Be silly on purpose. Learning should feel like a game, not homework. If it isn't free, it isn't finished.",
+      "about": "We started because language classes cost money and most people don't have any. So we built the opposite: a green owl that lives in your phone, bugs you every evening, and teaches you Spanish five minutes at a time. Fourteen years later the owl is still bugging people, and that is the entire business model.",
+      "founder_story": "Two people who had already built one thing the internet uses every day decided the next thing should be free forever. Everyone told them free education was a charity, not a company. They shipped it anyway.",
+      "homepage": [
+        "Learn a language in 5 minutes a day. Yes, five. We timed it.",
+        "Free. Actually free. Not free-trial free.",
+        "Your streak is 3 days old. Do not let it die on our watch."
+      ],
+      "product_page": [
+        "Short lessons that feel like a game, because your brain shows up for games and hides from homework.",
+        "Get a wrong answer? You lose a heart, not your dignity. Try again in a minute.",
+        "Leagues, streaks, XP, gems. We stole every trick mobile games use and pointed it at Portuguese."
+      ],
+      "cta": [
+        "Start learning. It's free.",
+        "Keep the streak alive.",
+        "One more lesson? Go on."
+      ],
+      "blog": [
+        "We looked at 2 billion exercises and found that people who practise at night remember more the next morning. We have no idea why. We are looking into it.",
+        "Why the owl guilt-trips you: a short, mildly embarrassing history of our push notifications.",
+        "Everyone asks if gamification actually works. Short answer: yes, but only if you're honest about the fact that you're doing it."
+      ],
+      "social": [
+        "your streak is on fire and so am I",
+        "Day 400 of Spanish. Still cannot order coffee. Still going.",
+        "The owl sees you skipping. The owl says nothing. The owl remembers."
+      ],
+      "ad": [
+        "Learn Spanish or the owl gets sad. Your call.",
+        "5 minutes a day. That's less than you spent choosing something to watch."
+      ],
+      "job_post": [
+        "We are looking for people who think education should be free and are annoyed that it isn't. Bring opinions. Bring them loudly.",
+        "You will ship things that millions of people use before lunch. This is fun and slightly terrifying."
+      ],
+      "support_doc": [
+        "Lost your streak? Streak Freeze protects it for one day off. Here's how to equip one.",
+        "Hearts refill over time, or instantly with gems. If you run out, practise old lessons to earn them back."
+      ],
+      "case_study": [
+        "A school district in Texas replaced its Spanish workbook budget with the app and reported the same test scores at zero cost."
+      ],
+      "testimonial": [
+        "I have a 900 day streak and a personality disorder about it. Also I can now argue in French."
+      ]
+    }
+  },
+  "generic": {
+    "_note": "The second reference point. In production this is scraped competitor pages + industry reports + templated marketing copy. Written here to represent category boilerplate.",
+    "industry": "language_learning_edtech",
+    "items": [
+      {
+        "asset_type": "homepage",
+        "text": "Unlock your potential with our comprehensive language learning platform. Personalized learning paths designed to help you achieve fluency faster. Start your free trial today."
+      },
+      {
+        "asset_type": "homepage",
+        "text": "Empowering learners worldwide with innovative, AI-powered language education. Our proven methodology delivers measurable results for students at every level."
+      },
+      {
+        "asset_type": "homepage",
+        "text": "The smarter way to learn a language. Adaptive technology tailors every lesson to your unique learning style, so you can reach your goals faster."
+      },
+      {
+        "asset_type": "product_page",
+        "text": "Our robust platform offers a seamless, end-to-end learning experience. Leverage cutting-edge speech recognition and adaptive algorithms to accelerate your progress."
+      },
+      {
+        "asset_type": "product_page",
+        "text": "Comprehensive curriculum developed by expert linguists. Industry-leading pedagogy combined with best-in-class technology to maximize learning outcomes."
+      },
+      {
+        "asset_type": "product_page",
+        "text": "Scalable solutions for individuals, teams and enterprises. Streamline language training across your organization with centralized analytics and reporting."
+      },
+      {
+        "asset_type": "mission",
+        "text": "Our mission is to empower every learner to achieve their full potential through accessible, high-quality language education."
+      },
+      {
+        "asset_type": "mission",
+        "text": "We are committed to transforming language education through innovation, driving meaningful outcomes for learners across the globe."
+      },
+      {
+        "asset_type": "about",
+        "text": "Founded by a team of passionate educators and technologists, we set out to revolutionize the way the world learns languages. Today we serve millions of users in over 100 countries."
+      },
+      {
+        "asset_type": "about",
+        "text": "We believe that education is the key to unlocking human potential. Our world-class team is dedicated to delivering exceptional learning experiences at scale."
+      },
+      {
+        "asset_type": "blog",
+        "text": "Five best practices for effective language acquisition. In this comprehensive guide we explore proven strategies that industry experts recommend for optimizing your study routine."
+      },
+      {
+        "asset_type": "blog",
+        "text": "The future of language learning is here. Discover how artificial intelligence is transforming the educational landscape and driving unprecedented engagement."
+      },
+      {
+        "asset_type": "cta",
+        "text": "Get started today. Request a demo. Contact our team to learn more about our enterprise solutions."
+      },
+      {
+        "asset_type": "cta",
+        "text": "Start your free trial. No credit card required. Join thousands of satisfied learners."
+      },
+      {
+        "asset_type": "sales_deck",
+        "text": "Trusted by leading institutions worldwide. Our differentiated approach delivers superior ROI compared to traditional classroom instruction and legacy competitors."
+      },
+      {
+        "asset_type": "job_post",
+        "text": "We are seeking a highly motivated individual to join our dynamic, fast-paced team. The ideal candidate will be a self-starter with excellent communication skills and a passion for education."
+      },
+      {
+        "asset_type": "case_study",
+        "text": "A leading global enterprise partnered with us to upskill their workforce, achieving a 40% improvement in language proficiency scores and significant cost savings."
+      },
+      {
+        "asset_type": "support_doc",
+        "text": "To reset your password, please navigate to the account settings page and follow the prompts. If you require further assistance, kindly contact our dedicated support team."
+      }
+    ]
+  }
+}

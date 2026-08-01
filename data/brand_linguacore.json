@@ -1,0 +1,56 @@
+{
+  "_note": "Case 1 — a new brand in the SAME industry as the existing demo brand (language-learning edtech), written with a deliberately different personality (formal B2B / assessment-driven vs. Duolingo's playful consumer voice). Illustrative text, not copied from any live brand. Because it's the same industry, it can reuse data/generic_edtech.json as its competitor corpus — no new generic file needed for this case.",
+  "brand_id": "linguacore",
+  "brand_name": "Linguacore",
+  "assets": {
+    "name": "Linguacore",
+    "tagline": "Language proficiency your teams can be measured on.",
+    "mission": "Give every global team a shared, verifiable standard of professional language fluency.",
+    "vision": "A future where language is never the reason a deal, a hire, or a rollout stalls.",
+    "values": "Rigor over rah-rah. Every claim is backed by an assessment score. Fluency is a business metric, not a soft skill. We report progress the way finance reports revenue: on a schedule, in writing, without spin.",
+    "about": "We were built inside an HR department that was tired of paying for language training it could not measure. Three years later we are the system of record forty enterprise L&D teams use to certify that their people can actually operate in the language they were hired to use.",
+    "founder_story": "Our founders ran global mobility for a Fortune 500 company and watched three expensive relocations fail because 'conversational fluency' on a resume meant nothing under pressure. They built the assessment first and the course content second, which is backwards for this industry and, they'd argue, the entire point.",
+    "homepage": [
+      "Certify fluency. Don't guess at it.",
+      "The language assessment your compliance team will actually accept.",
+      "Every learner gets a score. Every score is defensible in a promotion review."
+    ],
+    "product_page": [
+      "A four-skill assessment (reading, writing, listening, spoken) benchmarked against the CEFR scale, re-scored quarterly.",
+      "Course content is assigned only where the assessment shows a gap — no generic curriculum, no wasted seat time.",
+      "Manager dashboards report fluency the way they already report headcount: by team, by quarter, by risk."
+    ],
+    "cta": [
+      "Book a benchmark assessment for your team.",
+      "See the scorecard before you buy the course.",
+      "Talk to L&D procurement, not sales."
+    ],
+    "blog": [
+      "We audited 4,000 self-reported 'fluent' resumes against our assessment. Sixty-one percent scored below working proficiency. Here is what that costs a relocation program.",
+      "Why we refuse to issue a certificate without a proctored assessment behind it, even when clients ask us to skip it for a faster launch.",
+      "CEFR B2 is not a vibe. It is six specific things a speaker can do under pressure. We list all six."
+    ],
+    "social": [
+      "A fluency claim without a score attached is a hope, not a hire criterion.",
+      "We turned down a logo customer this quarter because they wanted the certificate without the assessment. Still turning them down."
+    ],
+    "ad": [
+      "Stop promoting on self-reported fluency. Start promoting on a score.",
+      "Your next relocation failure is probably a language gap nobody measured. Measure it first."
+    ],
+    "job_post": [
+      "We need someone who gets uncomfortable when a metric can't be traced back to a raw assessment score. If dashboards without an audit trail bother you, apply.",
+      "You will say no to feature requests that make the numbers look better without making the fluency better. That is the job."
+    ],
+    "support_doc": [
+      "Assessment scores are locked once submitted and cannot be edited by an administrator, including us — this is what makes the certificate defensible.",
+      "Re-assessment windows open automatically at 90 days; there is no manual override to shorten this."
+    ],
+    "case_study": [
+      "A logistics firm relocating 200 engineers used our benchmark to cut failed placements from 1 in 4 to 1 in 20 over eighteen months, with the assessment data submitted directly to their immigration counsel."
+    ],
+    "testimonial": [
+      "Our old vendor sent us a certificate. Linguacore sent us a score, the raw transcript, and a re-test date. That is the difference between a training vendor and a system of record."
+    ]
+  }
+}

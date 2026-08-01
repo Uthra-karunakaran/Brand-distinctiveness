@@ -55,6 +55,15 @@ ASSET_LAYER_MAP: dict[str, Layer] = {
 MVBF_FIELDS = ("name", "tagline", "mission", "vision", "values", "about")
 
 
+class ScorabilityError(Exception):
+    """Raised when a caller opts into strict enforcement of is_scorable()."""
+
+    def __init__(self, message: str, fields: list[str] | None = None):
+        super().__init__(message)
+        self.message = message
+        self.fields = fields or []
+
+
 class Chunk(BaseModel):
     """One embeddable unit of brand language."""
     text: str

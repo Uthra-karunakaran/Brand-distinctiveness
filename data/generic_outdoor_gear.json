@@ -1,0 +1,24 @@
+{
+  "_note": "The competitor / industry corpus for TrailForge (data/brand_trailforge.json). Represents typical outdoor gear & apparel marketing boilerplate — the kind of language most brands in this category converge on. Written here to represent category boilerplate, not copied from a live page.",
+  "industry": "outdoor_gear_apparel",
+  "items": [
+    {"asset_type": "homepage", "text": "Engineered for the elements. Our premium outdoor gear is designed to help you go further, push harder, and conquer any adventure life throws your way."},
+    {"asset_type": "homepage", "text": "Adventure awaits. Discover our latest collection of performance apparel, built with cutting-edge materials for the modern explorer."},
+    {"asset_type": "homepage", "text": "From the trail to the summit, our gear is trusted by outdoor enthusiasts everywhere. Uncompromising quality meets rugged durability."},
+    {"asset_type": "product_page", "text": "Crafted from premium, weather-resistant materials, this jacket delivers best-in-class protection without sacrificing style or comfort."},
+    {"asset_type": "product_page", "text": "Our proprietary fabric technology keeps you dry, warm, and comfortable in even the harshest conditions. Built to last a lifetime."},
+    {"asset_type": "product_page", "text": "Lightweight yet durable, this pack is the perfect companion for your next adventure, offering ample storage and superior comfort on long treks."},
+    {"asset_type": "mission", "text": "Our mission is to inspire a lifelong love of the outdoors by creating gear that empowers adventurers to explore with confidence."},
+    {"asset_type": "mission", "text": "We are committed to sustainability and innovation, crafting high-performance outdoor products that protect both our customers and the planet."},
+    {"asset_type": "about", "text": "Founded by a group of passionate outdoor enthusiasts, we set out to create gear that could keep up with our own adventures. Today we outfit explorers in over 50 countries."},
+    {"asset_type": "about", "text": "We believe everyone deserves access to high-quality outdoor gear. Our team of designers and engineers work tirelessly to bring you the best products on the market."},
+    {"asset_type": "blog", "text": "Top 10 essentials for your next backcountry trip. In this guide we break down the must-have gear recommended by seasoned adventurers and industry experts."},
+    {"asset_type": "blog", "text": "The future of outdoor apparel is here. Discover how innovative fabric technology is transforming performance gear and driving the next generation of exploration."},
+    {"asset_type": "cta", "text": "Shop the new collection today. Free shipping on all orders over $75. Gear up for your next adventure."},
+    {"asset_type": "cta", "text": "Join our community of adventurers. Sign up now and get 15% off your first order."},
+    {"asset_type": "sales_deck", "text": "Trusted by leading outdoor retailers worldwide. Our differentiated designs deliver superior performance compared to legacy competitors at a competitive price point."},
+    {"asset_type": "job_post", "text": "We are seeking a highly motivated, outdoor-loving individual to join our dynamic, fast-paced team. The ideal candidate is a self-starter with a passion for adventure and sustainability."},
+    {"asset_type": "case_study", "text": "A leading national park outfitter partnered with us to equip its guide staff, reporting a 30% reduction in gear replacement costs and improved guide satisfaction."},
+    {"asset_type": "support_doc", "text": "To initiate a warranty claim, please visit our online returns portal and follow the step-by-step instructions. Our customer care team is here to help with any questions."}
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "_note": "Ready-to-POST bodies for POST /brands/{id}/score, one per quadrant, for both new brands — same pattern as demo.py's four CANDIDATES for Duolingo. Run these AFTER the corresponding embeddings job (see request_linguacore_embeddings.json / request_trailforge_embeddings.json) has reached status 'ready'. expected_quadrant/verified_output were confirmed by actually running each payload end-to-end against a freshly generated brand.",
+  "linguacore": [
+    {
+      "expected_quadrant": "IDEAL",
+      "verified_output": {"overall_consistency": 78.9, "overall_distinctiveness": 92.0},
+      "payload": {
+        "label": "A - written in-voice",
+        "intended_layer": "messaging",
+        "channel": "landing_page",
+        "text": "Your team's fluency scorecard updates every quarter, not every performance review cycle. Every number traces back to a proctored assessment, not a self-report. If a promotion depends on 'business fluent,' we can tell you, in writing, whether that's actually true."
+      }
+    },
+    {
+      "expected_quadrant": "ON-BRAND BUT GENERIC",
+      "verified_output": {"overall_consistency": 55.7, "overall_distinctiveness": 14.3},
+      "payload": {
+        "label": "B - right claims, category language",
+        "intended_layer": "messaging",
+        "channel": "landing_page",
+        "text": "Empower your workforce with our comprehensive language training platform. Our personalized learning paths help employees achieve fluency faster, with measurable results your team will love. Start your free trial today."
+      }
+    },
+    {
+      "expected_quadrant": "UNIQUE BUT OFF-BRAND",
+      "verified_output": {"overall_consistency": 44.1, "overall_distinctiveness": 64.9},
+      "payload": {
+        "label": "C - distinctive, but not this brand",
+        "intended_layer": "messaging",
+        "channel": "landing_page",
+        "text": "Your streak is on fire! Keep it alive with one more five-minute lesson, rack up some gems and XP, and let the owl do the guilt-tripping tonight. Lessons feel like a game, hearts refill while you sleep, and the whole silly thing is totally free, forever."
+      }
+    },
+    {
+      "expected_quadrant": "LOST",
+      "verified_output": {"overall_consistency": 23.1, "overall_distinctiveness": 29.4},
+      "payload": {
+        "label": "D - neither",
+        "intended_layer": "messaging",
+        "channel": "landing_page",
+        "text": "We provide comprehensive solutions for the modern learner. Contact our team to learn more about our enterprise offerings and discover how we can support your organization's objectives."
+      }
+    }
+  ],
+  "trailforge": [
+    {
+      "expected_quadrant": "IDEAL",
+      "verified_output": {"overall_consistency": 89.9, "overall_distinctiveness": 90.8},
+      "payload": {
+        "label": "A - written in-voice",
+        "intended_layer": "messaging",
+        "channel": "landing_page",
+        "text": "This zipper pull is rated for about eight years of daily use. When it wears out, it's a $6 part with a number on it, not a reason to buy a new jacket. We'd rather tell you that now than have you find out from a landfill in 2032."
+      }
+    },
+    {
+      "expected_quadrant": "ON-BRAND BUT GENERIC",
+      "verified_output": {"overall_consistency": 57.1, "overall_distinctiveness": 31.1},
+      "payload": {
+        "label": "B - right claims, category language",
+        "intended_layer": "messaging",
+        "channel": "landing_page",
+        "text": "Built to last, and built to be repaired. Every zipper, buckle and seam on our durable outdoor gear is field-replaceable, backed by a generous multi-year warranty, so adventurers can count on quality performance for years to come, season after season."
+      }
+    },
+    {
+      "expected_quadrant": "UNIQUE BUT OFF-BRAND",
+      "verified_output": {"overall_consistency": 48.2, "overall_distinctiveness": 90.1},
+      "payload": {
+        "label": "C - distinctive, but not this brand",
+        "intended_layer": "messaging",
+        "channel": "landing_page",
+        "text": "Limited to 200 pieces per season, each piece is hand-numbered and finished in a single atelier by master tailors. This is couture for those who are seen, not gear for those who sweat. Waitlist only, by invitation."
+      }
+    },
+    {
+      "expected_quadrant": "LOST",
+      "verified_output": {"overall_consistency": 19.4, "overall_distinctiveness": 32.1},
+      "payload": {
+        "label": "D - neither",
+        "intended_layer": "messaging",
+        "channel": "landing_page",
+        "text": "We provide comprehensive solutions for the modern outdoor enthusiast. Contact our team to learn more about our enterprise offerings and discover how we can support your organization's objectives."
+      }
+    }
+  ]
+}
