@@ -1,0 +1,10 @@
+scikit-learn>=1.4
+numpy>=1.26
+pydantic>=2.6
+fastapi>=0.110
+uvicorn>=0.29
+faiss-cpu>=1.8      # vector store for precomputed brand/generic embeddings
+joblib>=1.4          # persists the fitted TF-IDF vectorizer between generation and API runs
+# real build (needs model download):
+# sentence-transformers>=2.7
+# anthropic>=0.40

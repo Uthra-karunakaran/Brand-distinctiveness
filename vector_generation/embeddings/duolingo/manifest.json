@@ -1,0 +1,16 @@
+{
+  "brand_id": "duolingo",
+  "brand_name": "Duolingo",
+  "industry": "language_learning_edtech",
+  "dims": 1184,
+  "brand_chunks": 30,
+  "generic_chunks": 18,
+  "layers_present": [
+    "identity",
+    "messaging",
+    "proof",
+    "voice"
+  ],
+  "scorable": true,
+  "scorable_message": "ok"
+}
