@@ -119,8 +119,12 @@ def main() -> None:
         print(f"  Clichés detected:     {ev['cliches_detected'] or '—'}")
         print(f"  Tone gap (largest):   {ev['tone_biggest_gap']} "
               f"[judge={ev['tone_judge']}]")
-        print(f"  Nearest brand chunk:  {ev['nearest_brand_chunk'][:70]}")
-        print(f"  Nearest generic chunk:{ev['nearest_generic_chunk'][:70]}")
+        print("  Nearest brand chunks:")
+        for chunk in ev["nearest_brand_chunks"]:
+            print(f"    - {chunk[:70]}")
+        print("  Nearest generic chunks:")
+        for chunk in ev["nearest_generic_chunks"]:
+            print(f"    - {chunk[:70]}")
 
     print("\n" + "=" * 74)
     print("\nFull JSON for candidate A:\n")

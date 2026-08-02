@@ -180,11 +180,12 @@ class BrandDistinctivenessScorer:
         oc, od = agg("consistency"), agg("distinctiveness")
         oq, on = QUADRANTS[(oc >= THRESHOLD, od >= THRESHOLD)]
 
-        # FAISS lookup: the nearest brand chunk and nearest generic chunk to
-        # this input, straight from the vector base mounted at startup.
+        # FAISS lookup: the top-3 nearest brand chunks and nearest generic
+        # chunks to this input, straight from the vector base mounted at
+        # startup.
         vec = self.store.encoder.encode([text])[0]
-        nearest_brand = self.store.nearest_brand_chunk(vec)
-        nearest_generic = self.store.nearest_generic_chunk(vec)
+        nearest_brand = self.store.nearest_brand_chunks(vec)
+        nearest_generic = self.store.nearest_generic_chunks(vec)
 
         return Report(
             brand=self.fp.brand_name,
@@ -203,8 +204,8 @@ class BrandDistinctivenessScorer:
                 "tone_brand": tone.brand_profile,
                 "tone_biggest_gap": tone.biggest_gap,
                 "tone_judge": tone.judge,
-                "nearest_brand_chunk": nearest_brand,
-                "nearest_generic_chunk": nearest_generic,
+                "nearest_brand_chunks": nearest_brand,
+                "nearest_generic_chunks": nearest_generic,
             },
             warnings=list(self.warnings),
         )

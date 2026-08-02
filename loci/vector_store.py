@@ -35,7 +35,7 @@ class BrandVectorStore:
 
         # The FAISS vector base: brand + generic corpora, mounted once and
         # queried per request for nearest-neighbour evidence (see
-        # nearest_brand_chunk / nearest_generic_chunk below).
+        # nearest_brand_chunks / nearest_generic_chunks below).
         self.brand_index = faiss.read_index(str(folder / "brand.index"))
         self.generic_index = faiss.read_index(str(folder / "generic.index"))
 
@@ -96,10 +96,12 @@ class BrandVectorStore:
 
     # ---------- FAISS lookups: nearest evidence for a scored input ----------
 
-    def nearest_brand_chunk(self, vec: np.ndarray) -> str:
-        _, i = self.brand_index.search(vec.reshape(1, -1).astype("float32"), 1)
-        return self.brand_meta[int(i[0][0])]["text"]
+    def nearest_brand_chunks(self, vec: np.ndarray, k: int = 3) -> list[str]:
+        _, i = self.brand_index.search(
+            vec.reshape(1, -1).astype("float32"), min(k, self.brand_index.ntotal))
+        return [self.brand_meta[int(idx)]["text"] for idx in i[0] if idx != -1]
 
-    def nearest_generic_chunk(self, vec: np.ndarray) -> str:
-        _, i = self.generic_index.search(vec.reshape(1, -1).astype("float32"), 1)
-        return self.generic_meta[int(i[0][0])]["text"]
+    def nearest_generic_chunks(self, vec: np.ndarray, k: int = 3) -> list[str]:
+        _, i = self.generic_index.search(
+            vec.reshape(1, -1).astype("float32"), min(k, self.generic_index.ntotal))
+        return [self.generic_meta[int(idx)]["text"] for idx in i[0] if idx != -1]
