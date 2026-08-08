@@ -2,7 +2,7 @@ services:
   - type: web
     name: loci-brand-distinctiveness-demo
     runtime: python
-    plan: starter       # funded by Render credit — avoids free-tier spin-down for the live demo
+    plan: free          # free tier — spins down after 15 min inactivity
     region: oregon
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn api:app --host 0.0.0.0 --port $PORT
