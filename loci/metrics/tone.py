@@ -31,7 +31,11 @@ import threading
 import time
 from dataclasses import dataclass
 
+from dotenv import load_dotenv
+
 import platform_admin
+
+load_dotenv()
 
 logger = logging.getLogger("loci.tone")
 

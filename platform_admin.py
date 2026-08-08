@@ -20,10 +20,13 @@ import os
 import secrets
 import time
 
+from dotenv import load_dotenv
 from fastapi import Header, HTTPException, Request
 from slowapi.util import get_remote_address
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
+
+load_dotenv()
 
 logger = logging.getLogger("platform_admin")
 

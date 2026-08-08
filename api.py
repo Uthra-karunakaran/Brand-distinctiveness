@@ -37,6 +37,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from uuid import uuid4
 
+from dotenv import load_dotenv
 from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -44,6 +45,8 @@ from slowapi import Limiter
 from slowapi import _rate_limit_exceeded_handler as _default_rate_limit_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
+
+load_dotenv()
 
 import platform_admin
 from loci.fingerprint import ASSET_LAYER_MAP, MVBF_FIELDS, InputCopy, Layer, ScorabilityError
@@ -61,7 +64,11 @@ DEMO_DISCLAIMER = (
     "This is a temporary demo deployment, not a production service. Data is "
     "held in memory and on local disk only — a redeploy, restart, or "
     "inactivity spin-down wipes any brand created via POST /brands/{id}/embeddings. "
-    "Only brands baked into the deployment at build time are guaranteed to be there."
+    "Only brands baked into the deployment at build time are guaranteed to be there. "
+    "Text submitted to POST /brands/{id}/score may be sent to Anthropic's Claude API "
+    "for tone-of-voice judging (see /brands/{id}/score docs) — it falls back to a "
+    "local heuristic once a daily call budget is reached or no API key is configured. "
+    "Do not submit confidential or sensitive text."
 )
 
 limiter = Limiter(key_func=get_remote_address)

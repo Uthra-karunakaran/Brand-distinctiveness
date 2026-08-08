@@ -10,7 +10,7 @@ They are computed from independent comparisons and combined only at the last ste
 ```
 python -m vector_generation.generate_embeddings   # offline: fit + embed once per brand
 python demo.py                                    # worked example, four candidates, one per quadrant
-uvicorn api:app --reload                          # service — loads precomputed embeddings at startup
+uvicorn api:app --host 0.0.0.0 --port 8001                       # service — loads precomputed embeddings at startup
 ```
 
 ---
