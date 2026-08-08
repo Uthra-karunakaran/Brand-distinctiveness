@@ -1,10 +1,12 @@
-scikit-learn>=1.4
-numpy>=1.26
-pydantic>=2.6
-fastapi>=0.110
-uvicorn>=0.29
-faiss-cpu>=1.8      # vector store for precomputed brand/generic embeddings
-joblib>=1.4          # persists the fitted TF-IDF vectorizer between generation and API runs
+scikit-learn==1.9.0
+numpy==2.5.1
+pydantic==2.13.4
+fastapi==0.141.1
+uvicorn==0.52.1
+faiss-cpu==1.14.3      # vector store for precomputed brand/generic embeddings
+joblib==1.5.3          # persists the fitted TF-IDF vectorizer between generation and API runs
+slowapi==0.1.10        # per-IP rate limiting on the demo deployment's expensive endpoints
+anthropic==0.121.0     # tone-of-voice judge (loci/metrics/tone.py) — degrades to a heuristic without it
+upstash-redis==1.7.0   # shared usage counters + daily rate caps, read directly in Upstash's console
 # real build (needs model download):
 # sentence-transformers>=2.7
-# anthropic>=0.40

@@ -29,16 +29,25 @@ job lifecycle, error codes and warning codes.
 from __future__ import annotations
 
 import logging
+import os
 import re
 import secrets
+import threading
 from contextlib import asynccontextmanager
 from pathlib import Path
 from uuid import uuid4
 
-from fastapi import BackgroundTasks, FastAPI, HTTPException
-from pydantic import BaseModel
+from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+from slowapi import Limiter
+from slowapi import _rate_limit_exceeded_handler as _default_rate_limit_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
+import platform_admin
 from loci.fingerprint import ASSET_LAYER_MAP, MVBF_FIELDS, InputCopy, Layer, ScorabilityError
+from loci.metrics import tone as tone_metrics
 from loci.scorer import LAYER_WEIGHTS, BrandDistinctivenessScorer
 from loci.vector_store import BrandVectorStore
 from vector_generation import industries, jobs
@@ -47,6 +56,20 @@ from vector_generation.jobs import JobRecord, JobStage
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s %(message)s")
 logger = logging.getLogger("loci.api")
+
+DEMO_DISCLAIMER = (
+    "This is a temporary demo deployment, not a production service. Data is "
+    "held in memory and on local disk only — a redeploy, restart, or "
+    "inactivity spin-down wipes any brand created via POST /brands/{id}/embeddings. "
+    "Only brands baked into the deployment at build time are guaranteed to be there."
+)
+
+limiter = Limiter(key_func=get_remote_address)
+
+# Caps total concurrent embedding-generation jobs regardless of caller — a
+# temp demo's CPU shouldn't be pegged by several different IPs at once, which
+# per-IP rate limiting alone wouldn't catch.
+_JOB_SLOTS = threading.Semaphore(2)
 
 EMBEDDINGS_ROOT = Path(__file__).parent / "vector_generation" / "embeddings"
 INDUSTRIES_ROOT = Path(__file__).parent / "vector_generation" / "industries"
@@ -73,11 +96,54 @@ async def lifespan(app: FastAPI):
     _SCORERS.clear()
 
 
-app = FastAPI(title="Loci — Brand Distinctiveness", lifespan=lifespan)
+app = FastAPI(title="Loci — Brand Distinctiveness", description=DEMO_DISCLAIMER, lifespan=lifespan)
+app.state.limiter = limiter
+app.add_middleware(platform_admin.MaintenanceModeMiddleware)
+
+
+def _rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    platform_admin.record_rate_limit_rejection("scorer")
+    return _default_rate_limit_handler(request, exc)
+
+
+app.add_exception_handler(RateLimitExceeded, _rate_limit_handler)
+
+_score_daily_ip_cap = platform_admin.make_daily_cap("scorer", "ip", "DAILY_IP_CAP_SCORE", default=300)
+_score_daily_visitor_cap = platform_admin.make_daily_cap("scorer", "visitor", "DAILY_VISITOR_CAP_SCORE", default=150)
+
+# No CORS middleware unless explicitly configured — set ALLOWED_ORIGINS
+# (comma-separated) in the deployment's env to the actual deployed frontend
+# origin(s) once that domain is known. Fails closed: cross-origin browser
+# calls get no Access-Control-Allow-Origin header until this is set.
+_allowed_origins = [o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "").split(",") if o.strip()]
+if _allowed_origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=_allowed_origins,
+        allow_methods=["GET", "POST"],
+        allow_headers=["*"],
+    )
+
+
+@app.get("/")
+def root() -> dict:
+    return {
+        "service": "Loci — Brand Distinctiveness",
+        "capabilities": [
+            "GET /brands", "POST /brands/{id}/score", "GET /brands/{id}/vocabulary",
+            "POST /brands/{id}/embeddings", "GET /jobs/{job_id}",
+            "GET /industries", "GET /industries/{industry_id}",
+        ],
+        "disclaimer": DEMO_DISCLAIMER,
+        "docs": "/docs",
+    }
+
+
+MAX_SCORE_TEXT_LENGTH = 4000  # matches the frontend's client-side cap (ScorerPage.jsx MAX_TEXT_LENGTH)
 
 
 class ScoreRequest(BaseModel):
-    text: str
+    text: str = Field(..., max_length=MAX_SCORE_TEXT_LENGTH)
     intended_layer: Layer = Layer.MESSAGING
     channel: str = "landing_page"
     label: str | None = None
@@ -123,7 +189,11 @@ def _mint_brand_id(brand_name: str) -> str:
 
 
 @app.post("/brands", status_code=201)
-def create_brand(req: CreateBrandRequest) -> dict:
+@limiter.limit("20/hour")
+def create_brand(
+    request: Request, req: CreateBrandRequest,
+    _key: None = Depends(platform_admin.require_client_key),
+) -> dict:
     return {"brand_id": _mint_brand_id(req.brand_name)}
 
 
@@ -147,13 +217,22 @@ def get_brand(brand_id: str) -> dict:
 
 
 @app.post("/brands/{brand_id}/score")
-def score_copy(brand_id: str, req: ScoreRequest) -> dict:
+@limiter.limit("60/minute")
+def score_copy(
+    request: Request, brand_id: str, req: ScoreRequest,
+    _key: None = Depends(platform_admin.require_client_key),
+    _ip_cap: None = Depends(_score_daily_ip_cap),
+    _visitor_cap: None = Depends(_score_daily_visitor_cap),
+    _visitor_seen: None = Depends(platform_admin.record_visitor_seen),
+) -> dict:
     scorer = _get_scorer(brand_id)
     copy = InputCopy(
         text=req.text, intended_layer=req.intended_layer,
         channel=req.channel, label=req.label,
     )
-    return scorer.score(copy).to_dict()
+    result = scorer.score(copy).to_dict()
+    platform_admin.record_score_call()
+    return result
 
 
 @app.get("/brands/{brand_id}/vocabulary")
@@ -197,49 +276,59 @@ def _resolve_industry(job_id: str, ref: GenericCorpusRef) -> dict:
 
 
 def _run_embedding_job(job_id: str, brand_id: str, req: EmbeddingsRequest) -> None:
-    jobs.start_job(job_id)
     try:
-        generic = _resolve_industry(job_id, req.generic_corpus)
-    except ValueError as e:
-        jobs.fail_job(job_id, "unknown_industry", str(e))
-        return
-    except Exception as e:
-        logger.exception("job %s failed unexpectedly while resolving industry", job_id)
-        jobs.fail_job(job_id, "internal_error", str(e))
-        return
+        jobs.start_job(job_id)
+        try:
+            generic = _resolve_industry(job_id, req.generic_corpus)
+        except ValueError as e:
+            jobs.fail_job(job_id, "unknown_industry", str(e))
+            return
+        except Exception as e:
+            logger.exception("job %s failed unexpectedly while resolving industry", job_id)
+            jobs.fail_job(job_id, "internal_error", str(e))
+            return
 
-    brand = {"brand_id": brand_id, "brand_name": req.brand_name, "assets": req.assets}
+        brand = {"brand_id": brand_id, "brand_name": req.brand_name, "assets": req.assets}
 
-    try:
-        out_dir, manifest = generate_from_dicts(
-            brand, generic, EMBEDDINGS_ROOT,
-            on_stage=lambda stage: jobs.update_stage(job_id, stage),
-            strict=True,
-        )
-    except ScorabilityError as e:
-        jobs.fail_job(job_id, "mvbf_not_met", e.message, fields=e.fields)
-        return
-    except ValueError as e:
-        jobs.fail_job(job_id, "unmapped_asset_type", str(e))
-        return
-    except Exception as e:
-        logger.exception("job %s failed unexpectedly", job_id)
-        jobs.fail_job(job_id, "internal_error", str(e))
-        return
+        try:
+            out_dir, manifest = generate_from_dicts(
+                brand, generic, EMBEDDINGS_ROOT,
+                on_stage=lambda stage: jobs.update_stage(job_id, stage),
+                strict=True,
+            )
+        except ScorabilityError as e:
+            jobs.fail_job(job_id, "mvbf_not_met", e.message, fields=e.fields)
+            return
+        except ValueError as e:
+            jobs.fail_job(job_id, "unmapped_asset_type", str(e))
+            return
+        except Exception as e:
+            logger.exception("job %s failed unexpectedly", job_id)
+            jobs.fail_job(job_id, "internal_error", str(e))
+            return
 
-    for w in manifest.get("warnings", []):
-        jobs.add_warning(job_id, w["code"], w["message"])
+        for w in manifest.get("warnings", []):
+            jobs.add_warning(job_id, w["code"], w["message"])
 
-    store = BrandVectorStore.load(out_dir)
-    _SCORERS[brand_id] = BrandDistinctivenessScorer(store)
+        store = BrandVectorStore.load(out_dir)
+        _SCORERS[brand_id] = BrandDistinctivenessScorer(store)
 
-    jobs.complete_job(job_id)
+        jobs.complete_job(job_id)
+    finally:
+        _JOB_SLOTS.release()
 
 
 @app.post("/brands/{brand_id}/embeddings", status_code=202)
-def submit_embeddings(brand_id: str, req: EmbeddingsRequest, background_tasks: BackgroundTasks) -> dict:
+@limiter.limit("5/hour")
+def submit_embeddings(
+    request: Request, brand_id: str, req: EmbeddingsRequest, background_tasks: BackgroundTasks,
+    _key: None = Depends(platform_admin.require_client_key),
+) -> dict:
+    if not _JOB_SLOTS.acquire(blocking=False):
+        raise HTTPException(429, "Server is at capacity for embedding generation right now — try again shortly.")
     job_id = str(uuid4())
     if not jobs.try_acquire_brand_lock(brand_id, job_id):
+        _JOB_SLOTS.release()
         raise HTTPException(409, f"A job is already in flight for brand '{brand_id}'.")
     jobs.create_job(job_id, brand_id)
     background_tasks.add_task(_run_embedding_job, job_id, brand_id, req)

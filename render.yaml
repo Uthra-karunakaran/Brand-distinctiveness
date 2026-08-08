@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: loci-brand-distinctiveness-demo
+    runtime: python
+    plan: free          # temp demo — bump to `starter` if the free tier's spin-down is too aggressive
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.9
+      - key: ALLOWED_ORIGINS
+        value: ""
+    # No autoscaling / numInstances block on purpose: this app keeps brand
+    # state, job status, and rate limits in per-process memory (see api.py),
+    # so it must stay a single instance, single worker.

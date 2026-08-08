@@ -1,0 +1,14 @@
+{
+  "brand_id": "pakhi-13cc49",
+  "brand_name": "pakhi",
+  "industry": "language_learning_edtech",
+  "dims": 613,
+  "brand_chunks": 6,
+  "generic_chunks": 18,
+  "layers_present": [
+    "identity"
+  ],
+  "scorable": true,
+  "scorable_message": "ok",
+  "warnings": []
+}

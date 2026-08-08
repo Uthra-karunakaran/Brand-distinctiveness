@@ -13,16 +13,32 @@ Design notes that matter:
     and cached — not re-derived per request.
   - If no API key is present the scorer degrades to a lexical heuristic so the
     demo never hard-fails on stage.
+  - Per-request judging is the hot path (every POST /score can trigger a live
+    call), so results are cached by exact input text, and a process-wide daily
+    call budget (ANTHROPIC_CALL_BUDGET, default 200) caps worst-case spend on
+    an unauthenticated public demo — once hit, requests fall back to the
+    heuristic until the budget resets at UTC midnight. `usage.snapshot()`
+    reports current counts.
 """
 from __future__ import annotations
 
+import hashlib
 import json
+import logging
 import os
 import re
+import threading
+import time
 from dataclasses import dataclass
+
+import platform_admin
+
+logger = logging.getLogger("loci.tone")
 
 AXES = ["formal_casual", "serious_playful", "corporate_human",
         "restrained_bold", "technical_accessible"]
+
+DAILY_CALL_BUDGET = int(os.environ.get("ANTHROPIC_CALL_BUDGET", "200"))
 
 JUDGE_SYSTEM = """You are a brand-voice rating instrument. You do not write copy \
 and you do not give opinions.
@@ -81,6 +97,68 @@ def _heuristic_profile(text: str) -> dict[str, float]:
     }
 
 
+# ---------- usage tracking + call budget ----------
+
+class ToneUsage:
+    """Process-wide, in-memory only — resets on restart, same as everything
+    else in this demo. Counters roll over at UTC midnight."""
+
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self._day = time.strftime("%Y-%m-%d", time.gmtime())
+        self.llm_calls = 0
+        self.llm_errors = 0
+        self.cache_hits = 0
+        self.heuristic_fallbacks = 0
+        self.budget_exhausted = 0
+
+    def _roll_if_new_day_locked(self) -> None:
+        today = time.strftime("%Y-%m-%d", time.gmtime())
+        if today != self._day:
+            self._day = today
+            self.llm_calls = self.llm_errors = self.cache_hits = 0
+            self.heuristic_fallbacks = self.budget_exhausted = 0
+
+    def under_budget(self) -> bool:
+        with self._lock:
+            self._roll_if_new_day_locked()
+            return self.llm_calls < DAILY_CALL_BUDGET
+
+    def record(self, field: str) -> None:
+        with self._lock:
+            self._roll_if_new_day_locked()
+            setattr(self, field, getattr(self, field) + 1)
+
+    def snapshot(self) -> dict:
+        with self._lock:
+            self._roll_if_new_day_locked()
+            return {
+                "date_utc": self._day,
+                "daily_budget": DAILY_CALL_BUDGET,
+                "llm_calls": self.llm_calls,
+                "llm_errors": self.llm_errors,
+                "cache_hits": self.cache_hits,
+                "heuristic_fallbacks": self.heuristic_fallbacks,
+                "budget_exhausted": self.budget_exhausted,
+            }
+
+
+usage = ToneUsage()
+
+# Exact-text cache: profile(text) is pure, and the likeliest repeat pattern
+# (re-scoring the same draft, rate-limit testers replaying one payload) is an
+# exact resubmission, not a near-duplicate — so a hash-keyed cache captures
+# most of the win without fuzzy-matching complexity. Bounded and unordered
+# eviction is fine; this is a cost guard, not a correctness-critical store.
+_CACHE_MAX = 2000
+_cache_lock = threading.Lock()
+_cache: dict[str, tuple[dict[str, float], str]] = {}
+
+
+def _cache_key(text: str) -> str:
+    return hashlib.sha256(text.strip().lower().encode("utf-8")).hexdigest()
+
+
 # ---------- LLM judge ----------
 
 def _llm_profile(text: str, model: str = "claude-sonnet-4-6") -> dict[str, float] | None:
@@ -90,25 +168,50 @@ def _llm_profile(text: str, model: str = "claude-sonnet-4-6") -> dict[str, float
     try:
         import anthropic
         client = anthropic.Anthropic(api_key=key)
+        usage.record("llm_calls")
         resp = client.messages.create(
             model=model,
             max_tokens=300,
             system=JUDGE_SYSTEM,
             messages=[{"role": "user", "content": f"SAMPLE:\n{text}"}],
         )
+        logger.info(
+            "tone judge call model=%s input_tokens=%s output_tokens=%s",
+            model, resp.usage.input_tokens, resp.usage.output_tokens,
+        )
+        platform_admin.record_llm_usage(resp.usage.input_tokens, resp.usage.output_tokens)
         raw = "".join(b.text for b in resp.content if b.type == "text")
         raw = raw.replace("```json", "").replace("```", "").strip()
         data = json.loads(raw)
         return {a: float(data[a]) for a in AXES}
     except Exception:
+        usage.record("llm_errors")
+        logger.warning("tone judge call failed, falling back to heuristic", exc_info=True)
         return None
 
 
 def profile(text: str) -> tuple[dict[str, float], str]:
-    p = _llm_profile(text)
+    key = _cache_key(text)
+    with _cache_lock:
+        hit = _cache.get(key)
+    if hit is not None:
+        usage.record("cache_hits")
+        return hit
+
+    budget_ok = usage.under_budget()
+    p = _llm_profile(text) if budget_ok else None
+
     if p is not None:
-        return p, "llm"
-    return _heuristic_profile(text), "heuristic"
+        result = (p, "llm")
+    else:
+        usage.record("budget_exhausted" if not budget_ok else "heuristic_fallbacks")
+        result = (_heuristic_profile(text), "heuristic")
+
+    with _cache_lock:
+        if len(_cache) >= _CACHE_MAX:
+            _cache.pop(next(iter(_cache)))
+        _cache[key] = result
+    return result
 
 
 class ToneScorer:
