@@ -69,7 +69,6 @@ class Chunk(BaseModel):
     text: str
     asset_type: str
     layer: Layer
-    source_url: str | None = None
 
     @property
     def words(self) -> int:
@@ -148,7 +147,6 @@ class GenericCorpus(BaseModel):
                 text=i["text"],
                 asset_type=i.get("asset_type", "homepage"),
                 layer=ASSET_LAYER_MAP.get(i.get("asset_type", "homepage"), Layer.MESSAGING),
-                source_url=i.get("source_url"),
             )
             for i in items
         ]

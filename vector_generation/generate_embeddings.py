@@ -25,9 +25,9 @@ they only load what this module writes.
 Writes vector_generation/embeddings/<brand_id>/:
     manifest.json          brand_id, brand_name, industry, counts, dims
     brand_vectors.npy      (N_brand, D) float32, L2-normalised
-    brand_meta.json        per-row {text, asset_type, layer, source_url, words}
+    brand_meta.json        per-row {text, asset_type, layer, words}
     generic_vectors.npy    (N_generic, D) float32, L2-normalised
-    generic_meta.json      per-row {text, asset_type, layer, source_url, words}
+    generic_meta.json      per-row {text, asset_type, layer, words}
     vectorizer.joblib      fitted sklearn TfidfVectorizer
     term_weights.npy       discriminative term weights, aligned to the vectorizer's vocab
     brand.index            FAISS IndexFlatIP over brand_vectors
@@ -84,7 +84,6 @@ def _meta_rows(chunks: list[Chunk]) -> list[dict]:
             "text": c.text,
             "asset_type": c.asset_type,
             "layer": c.layer.value,
-            "source_url": c.source_url,
             "words": c.words,
         }
         for c in chunks

@@ -698,7 +698,7 @@ dropping or mis-filing it (`fingerprint.py:96-99`). This is what produces the
 
 ## 2.2 Chunk, BrandFingerprint, and the MVBF floor
 
-A `Chunk` is the atomic unit: `{text, asset_type, layer, source_url}`. A
+A `Chunk` is the atomic unit: `{text, asset_type, layer}`. A
 `BrandFingerprint` is just `{brand_id, brand_name, chunks: [Chunk]}`, built from a raw
 `{asset_type: text | [texts]}` dict via `BrandFingerprint.from_assets()`.
 
@@ -734,7 +734,7 @@ to compute a stable centroid" hard stop.
 ## 2.3 GenericCorpus — the second reference point
 
 Structurally identical to a fingerprint but built from a flat list of
-`{text, asset_type, source_url}` dicts rather than the asset-dict shape (competitor
+`{text, asset_type}` dicts rather than the asset-dict shape (competitor
 corpora don't need MVBF-style structure — they're just "language from this
 industry"). `GenericCorpus.texts(layer)` has a fallback baked in: if fewer than 3
 chunks exist for the requested layer, it returns the *entire* corpus instead —
@@ -928,7 +928,7 @@ missing):
 |---|---|
 | `manifest.json` | brand_id, brand_name, industry, dims, chunk counts, layers present, scorable flag+message, warnings |
 | `brand_vectors.npy` / `generic_vectors.npy` | `(N, D)` float32, L2-normalized, one row per chunk |
-| `brand_meta.json` / `generic_meta.json` | one `{text, asset_type, layer, source_url, words}` object per row, **same order** as the corresponding `.npy` — this is what makes it possible to open the folder and see exactly what got embedded, in what order |
+| `brand_meta.json` / `generic_meta.json` | one `{text, asset_type, layer, words}` object per row, **same order** as the corresponding `.npy` — this is what makes it possible to open the folder and see exactly what got embedded, in what order |
 | `vectorizer.joblib` | the fitted `sklearn.TfidfVectorizer` (pickled via joblib) |
 | `term_weights.npy` | the discriminative term weights from §1.7, aligned to the vectorizer's vocabulary indices |
 | `brand.index` / `generic.index` | FAISS `IndexFlatIP`, one per corpus |
