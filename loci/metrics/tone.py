@@ -194,6 +194,25 @@ def _llm_profile(text: str, model: str = "claude-sonnet-4-6") -> dict[str, float
         return None
 
 
+def compute_profiles_for_caching(exemplars: list[str]) -> tuple[dict[str, float], str]:
+    """
+    Pre-compute tone profiles for a set of voice exemplars during offline
+    embedding generation. Returns the averaged profile and judge type.
+    Used by vector_generation to cache profiles in the manifest, avoiding
+    API calls at server startup.
+    """
+    profiles, judges = [], set()
+    for ex in exemplars:
+        p, j = profile(ex)
+        profiles.append(p)
+        judges.add(j)
+    brand_profile = {
+        a: sum(p[a] for p in profiles) / len(profiles) for a in AXES
+    }
+    judge = "llm" if "llm" in judges else "heuristic"
+    return brand_profile, judge
+
+
 def profile(text: str) -> tuple[dict[str, float], str]:
     key = _cache_key(text)
     with _cache_lock:
@@ -219,16 +238,20 @@ def profile(text: str) -> tuple[dict[str, float], str]:
 
 
 class ToneScorer:
-    def __init__(self, brand_voice_exemplars: list[str]):
-        profiles, judges = [], set()
-        for ex in brand_voice_exemplars:
-            p, j = profile(ex)
-            profiles.append(p)
-            judges.add(j)
-        self.brand_profile = {
-            a: sum(p[a] for p in profiles) / len(profiles) for a in AXES
-        }
-        self.judge = "llm" if "llm" in judges else "heuristic"
+    def __init__(self, brand_voice_exemplars: list[str], cached_brand_profile: dict[str, float] | None = None):
+        if cached_brand_profile is not None:
+            self.brand_profile = cached_brand_profile
+            self.judge = "llm"  # if cached, it was computed with LLM
+        else:
+            profiles, judges = [], set()
+            for ex in brand_voice_exemplars:
+                p, j = profile(ex)
+                profiles.append(p)
+                judges.add(j)
+            self.brand_profile = {
+                a: sum(p[a] for p in profiles) / len(profiles) for a in AXES
+            }
+            self.judge = "llm" if "llm" in judges else "heuristic"
 
     def score(self, text: str) -> ToneScores:
         p, judge = profile(text)

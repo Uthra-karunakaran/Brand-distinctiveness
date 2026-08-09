@@ -13,5 +13,15 @@
   ],
   "scorable": true,
   "scorable_message": "ok",
-  "warnings": []
+  "warnings": [],
+  "tone_profiles": {
+    "brand_profile": {
+      "formal_casual": 8.0,
+      "serious_playful": 6.8,
+      "corporate_human": 8.6,
+      "restrained_bold": 6.4,
+      "technical_accessible": 9.4
+    },
+    "judge": "llm"
+  }
 }

@@ -3,210 +3,180 @@
     "text": "Duolingo",
     "asset_type": "name",
     "layer": "identity",
-    "source_url": null,
     "words": 1
   },
   {
     "text": "The free, fun, and effective way to learn a language.",
     "asset_type": "tagline",
     "layer": "identity",
-    "source_url": null,
     "words": 10
   },
   {
     "text": "Make language education free and available to everyone on earth, and keep it that way.",
     "asset_type": "mission",
     "layer": "identity",
-    "source_url": null,
     "words": 15
   },
   {
     "text": "A world where the best education money can buy costs nothing.",
     "asset_type": "vision",
     "layer": "identity",
-    "source_url": null,
     "words": 11
   },
   {
     "text": "Take the user's side. Ship it. Be silly on purpose. Learning should feel like a game, not homework. If it isn't free, it isn't finished.",
     "asset_type": "values",
     "layer": "identity",
-    "source_url": null,
     "words": 25
   },
   {
     "text": "We started because language classes cost money and most people don't have any. So we built the opposite: a green owl that lives in your phone, bugs you every evening, and teaches you Spanish five minutes at a time. Fourteen years later the owl is still bugging people, and that is the entire business model.",
     "asset_type": "about",
     "layer": "identity",
-    "source_url": null,
     "words": 55
   },
   {
     "text": "Two people who had already built one thing the internet uses every day decided the next thing should be free forever. Everyone told them free education was a charity, not a company. They shipped it anyway.",
     "asset_type": "founder_story",
     "layer": "identity",
-    "source_url": null,
     "words": 36
   },
   {
     "text": "Learn a language in 5 minutes a day. Yes, five. We timed it.",
     "asset_type": "homepage",
     "layer": "messaging",
-    "source_url": null,
     "words": 13
   },
   {
     "text": "Free. Actually free. Not free-trial free.",
     "asset_type": "homepage",
     "layer": "messaging",
-    "source_url": null,
     "words": 6
   },
   {
     "text": "Your streak is 3 days old. Do not let it die on our watch.",
     "asset_type": "homepage",
     "layer": "messaging",
-    "source_url": null,
     "words": 14
   },
   {
     "text": "Short lessons that feel like a game, because your brain shows up for games and hides from homework.",
     "asset_type": "product_page",
     "layer": "messaging",
-    "source_url": null,
     "words": 18
   },
   {
     "text": "Get a wrong answer? You lose a heart, not your dignity. Try again in a minute.",
     "asset_type": "product_page",
     "layer": "messaging",
-    "source_url": null,
     "words": 16
   },
   {
     "text": "Leagues, streaks, XP, gems. We stole every trick mobile games use and pointed it at Portuguese.",
     "asset_type": "product_page",
     "layer": "messaging",
-    "source_url": null,
     "words": 16
   },
   {
     "text": "Start learning. It's free.",
     "asset_type": "cta",
     "layer": "messaging",
-    "source_url": null,
     "words": 4
   },
   {
     "text": "Keep the streak alive.",
     "asset_type": "cta",
     "layer": "messaging",
-    "source_url": null,
     "words": 4
   },
   {
     "text": "One more lesson? Go on.",
     "asset_type": "cta",
     "layer": "messaging",
-    "source_url": null,
     "words": 5
   },
   {
     "text": "We looked at 2 billion exercises and found that people who practise at night remember more the next morning. We have no idea why. We are looking into it.",
     "asset_type": "blog",
     "layer": "voice",
-    "source_url": null,
     "words": 29
   },
   {
     "text": "Why the owl guilt-trips you: a short, mildly embarrassing history of our push notifications.",
     "asset_type": "blog",
     "layer": "voice",
-    "source_url": null,
     "words": 14
   },
   {
     "text": "Everyone asks if gamification actually works. Short answer: yes, but only if you're honest about the fact that you're doing it.",
     "asset_type": "blog",
     "layer": "voice",
-    "source_url": null,
     "words": 21
   },
   {
     "text": "your streak is on fire and so am I",
     "asset_type": "social",
     "layer": "voice",
-    "source_url": null,
     "words": 9
   },
   {
     "text": "Day 400 of Spanish. Still cannot order coffee. Still going.",
     "asset_type": "social",
     "layer": "voice",
-    "source_url": null,
     "words": 10
   },
   {
     "text": "The owl sees you skipping. The owl says nothing. The owl remembers.",
     "asset_type": "social",
     "layer": "voice",
-    "source_url": null,
     "words": 12
   },
   {
     "text": "Learn Spanish or the owl gets sad. Your call.",
     "asset_type": "ad",
     "layer": "voice",
-    "source_url": null,
     "words": 9
   },
   {
     "text": "5 minutes a day. That's less than you spent choosing something to watch.",
     "asset_type": "ad",
     "layer": "voice",
-    "source_url": null,
     "words": 13
   },
   {
     "text": "We are looking for people who think education should be free and are annoyed that it isn't. Bring opinions. Bring them loudly.",
     "asset_type": "job_post",
     "layer": "voice",
-    "source_url": null,
     "words": 22
   },
   {
     "text": "You will ship things that millions of people use before lunch. This is fun and slightly terrifying.",
     "asset_type": "job_post",
     "layer": "voice",
-    "source_url": null,
     "words": 17
   },
   {
     "text": "Lost your streak? Streak Freeze protects it for one day off. Here's how to equip one.",
     "asset_type": "support_doc",
     "layer": "voice",
-    "source_url": null,
     "words": 16
   },
   {
     "text": "Hearts refill over time, or instantly with gems. If you run out, practise old lessons to earn them back.",
     "asset_type": "support_doc",
     "layer": "voice",
-    "source_url": null,
     "words": 19
   },
   {
     "text": "A school district in Texas replaced its Spanish workbook budget with the app and reported the same test scores at zero cost.",
     "asset_type": "case_study",
     "layer": "proof",
-    "source_url": null,
     "words": 22
   },
   {
     "text": "I have a 900 day streak and a personality disorder about it. Also I can now argue in French.",
     "asset_type": "testimonial",
     "layer": "proof",
-    "source_url": null,
     "words": 19
   }
 ]

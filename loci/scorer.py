@@ -124,7 +124,10 @@ class BrandDistinctivenessScorer:
         self.structural = StructuralScorer(brand_all)
 
         voice_exemplars = self.fp.texts(Layer.VOICE) or brand_all[:5]
-        self.tone = ToneScorer(voice_exemplars[:5])
+        cached_profile = None
+        if "tone_profiles" in store.manifest:
+            cached_profile = store.manifest["tone_profiles"]["brand_profile"]
+        self.tone = ToneScorer(voice_exemplars[:5], cached_brand_profile=cached_profile)
 
     @classmethod
     def from_folder(cls, folder) -> "BrandDistinctivenessScorer":

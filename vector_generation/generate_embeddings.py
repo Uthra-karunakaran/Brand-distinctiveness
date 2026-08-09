@@ -63,7 +63,8 @@ import faiss
 import joblib
 import numpy as np
 
-from loci.fingerprint import BrandFingerprint, Chunk, GenericCorpus, ScorabilityError
+from loci.fingerprint import BrandFingerprint, Chunk, GenericCorpus, Layer, ScorabilityError
+from loci.metrics.tone import compute_profiles_for_caching
 
 from vector_generation import industries
 from vector_generation.embedder import TfidfEmbedder
@@ -163,6 +164,22 @@ def generate_from_dicts(
         faiss.write_index(_faiss_index(generic_vecs), str(tmp_dir / "generic.index"))
 
         stage(JobStage.WRITING_MANIFEST)
+
+        # Pre-compute tone profiles for voice exemplars to avoid API calls at startup
+        tone_profiles = None
+        voice_exemplars = fp.texts(Layer.VOICE) or fp.texts()
+        if voice_exemplars:
+            try:
+                tone_profile, tone_judge = compute_profiles_for_caching(voice_exemplars[:5])
+                tone_profiles = {
+                    "brand_profile": tone_profile,
+                    "judge": tone_judge,
+                }
+            except Exception:
+                # If tone profiling fails, continue without caching — startup will
+                # fall back to computing profiles on demand.
+                pass
+
         manifest = {
             "brand_id": fp.brand_id,
             "brand_name": fp.brand_name,
@@ -175,6 +192,8 @@ def generate_from_dicts(
             "scorable_message": msg,
             "warnings": warnings,
         }
+        if tone_profiles is not None:
+            manifest["tone_profiles"] = tone_profiles
         (tmp_dir / "manifest.json").write_text(json.dumps(manifest, indent=2))
         (tmp_dir / "source_input.json").write_text(json.dumps({"brand": brand, "generic": generic}, indent=2))
 
